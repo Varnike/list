@@ -1,20 +1,24 @@
 #include "list.h"
 
+static int get_free_place(LIST *lst);
 static void init_list(LIST *list);
-static int get_free_place(LIST *list);
+static void init_free_space(LIST *list);
+static void add_free_node(LIST *list, int pos);
+static int get_free_node(LIST *list);
+static void set_list_node(LIST *list, int pos, listv_t val, int next, int prev);
 
 int ListCtor(LIST *list, int pos, listv_t val)
 {
 	assert(list);
 	
-	list->list = (int *)calloc(sizeof(int), BUFF_SIZE);
-	list->buff = (listv_t*)calloc(sizeof(listv_t), BUFF_SIZE);
+	list->buff = (_NODE*)calloc(sizeof(_NODE), BUFF_SIZE);
+	list->MAX_SIZE = BUFF_SIZE; //TODO for future
 
 	init_list(list);
+	set_list_node(list, pos, val, 0, 0);
+	init_free_space(list);
 	
-	list->list[pos] = 0;
-	list->buff[pos] = val;
-	
+	list->size = 1;
 	list->HEAD = pos;
 	list->TAIL = pos;
 
@@ -26,140 +30,348 @@ int ListDtor(LIST *list)
 {
 	LIST_CHECK;
 
-	free(list->list);
 	free(list->buff);
 
 	return 0;
 }
 
-int ListInsertStart(LIST *list, listv_t val)
+listv_t ListGetValue(LIST *list, int pos)
 {
-	//insert_side(list, val, __START);
+	LIST_CHECK;
 	
-	int next = get_free_place(list);
-	if (next < 0)
-		return -1;//TODO err
-
-	list->buff[next] = val;
-	list->list[next] = 0;
-
-	list->list[list->HEAD] = next;
-	list->HEAD = next;
+	return list->buff[pos].val;
 
 	LIST_CHECK;
-	return 0;
 }
 
 int ListInsertBack(LIST *list, listv_t val)
-{                                          
-	int next = get_free_place(list);
-	if (next < 0)
-		return -1;//TODO err
+{
+	LIST_CHECK;
 
-	list->buff[next] = val;
-	list->list[next] = list->TAIL;
-	list->TAIL = next; 
+	int lnext = get_free_node(list);
+	if (lnext < 0)
+		return -1;
+	
+	list->size++;
+	set_list_node(list, lnext, val, 0, list->TAIL);
+	
+	list->buff[list->TAIL].next = lnext;
+	list->TAIL = lnext;
+
+	LIST_CHECK;
+	return lnext;
+}
+
+int ListInsertFront(LIST *list, listv_t val)
+{
+	LIST_CHECK;
+
+	int lnext = get_free_node(list);
+	if (lnext < 0) 
+		return -1;
+	
+	list->size++;
+	set_list_node(list, lnext, val, list->HEAD, 0);
+	
+	list->buff[list->HEAD].prev = lnext;
+	list->HEAD = lnext; 
 
 	LIST_CHECK;                     
-	return next;
+	
+	return lnext;
 }                                          
 
 int ListInsert(LIST *list, int pos, listv_t val)
 {
 	LIST_CHECK;
-
-	int next = get_free_place(list);
-	if (next < 0)
-		return -1; //TODO err
-
-	list->buff[next] = val;
-	list->list[next] = list->list[pos];
-	list->list[pos]  = next;
+	
+	int lnext = get_free_place(list);
+	if (lnext < 0)
+		return -1;
+	
+	list->size++;
+	/* setup new node */
+	set_list_node(list, lnext, val, list->buff[pos].next, pos);
+	
+	/* update old ones */
+	list->buff[pos].next  = lnext;
+	list->buff[list->buff[pos].next].prev = lnext;
 
 	LIST_CHECK;
 
-	return next;
+	return lnext;
 }
 
 int ListDelete(LIST *list, int pos)
 {
 	LIST_CHECK;
 
-	printf("pos = %d\n", pos);
-	if (pos <= 0)
-		return -1;// TODO err
-
-	if (pos == list->TAIL) {
-		list->TAIL = list->list[pos];
-		list->list[pos] = -1;
-		return 0;
-	}
-
-	if (pos == list->HEAD) {
-		list->list[pos] = -1;
-		return 0;
-	}
+	if (pos <= 0) {
+		ERRNUM = LIST_INV_POS_ERR;
+		return -1;
+	}	
 	
-	int prev = ListFindNode(list, pos);
-	printf("pos = %d, prev = %d\n", pos, prev);
+	list->size--;
 
-	list->list[prev] = list->list[pos];
-	list->list[pos] = -1;
+	if (pos == list->TAIL || pos == list->HEAD) {
+		if (pos == list->TAIL) {
+			list->TAIL = list->buff[pos].prev;
+		
+			list->buff[list->TAIL].next = 0;
+		} else {
+			list->HEAD = list->buff[pos].next;
+                                  
+			list->buff[list->HEAD].prev = 0;  
+		}
+
+		set_list_node(list, pos, 0, -1, -1);
+		add_free_node(list, pos);
+		return 0;
+	}
+
+	int lprev = list->buff[pos].prev;
+	int lnext = list->buff[pos].next;
+
+	list->buff[lprev].next = lnext;
+	list->buff[lnext].prev = lprev;	
+
+	set_list_node(list, pos, 0, -1, -1);
+	add_free_node(list, pos);
 
 	LIST_CHECK;
 	return 0;
 }
 
-int ListFindNode(LIST *list, int logical_pos)
+int ListLinearise(LIST *list)
 {
+	LIST_CHECK;
+	
+	_NODE *newbuff = list->buff;
+	list->buff = (_NODE*)calloc(sizeof(_NODE), BUFF_SIZE);	
+	
+	if (list->buff == NULL)
+		return ERRNUM = CALLOC_ERR;
+
+	init_list(list);
+
+	int node_cnt = 1;
+	int it = list->HEAD;
+	
+	do {
+		list->buff[node_cnt++] = newbuff[it];
+		it = newbuff[it].next;
+	} while(it != 0 && node_cnt != list->MAX_SIZE);
+	
+	list->HEAD = 1;
+	list->TAIL = node_cnt - 1;
+	free(newbuff);
+	
+	init_free_space(list);
+	
+	LIST_CHECK;
+	return 0;
+}
+
+int ______ListFindNode(LIST *list, int logical_pos)
+{
+	LIST_CHECK;
+
 	for (int ph_pos = 0; ph_pos != BUFF_SIZE; ph_pos++) {
-		if (list->list[ph_pos] == logical_pos)
+		if (list->buff[ph_pos].next == logical_pos)
 			return ph_pos;
 	}
+	
+	ERRNUM = LIST_NODE_NOT_FOUND;
 
 	return -1;
 }
+
 void ListDump(LIST *list)
 {
 	assert(list);
 	assert(list->buff);
-	assert(list->list);
 	
-	printf("HEAD = %d, TAIL = %d\n PHYSICAL LIST:\n", list->HEAD, list->TAIL);
+	printf("HEAD = %d, TAIL = %d, FREE = %d, size = %d\nPHYSICAL LIST:\n",
+		       	list->HEAD, list->TAIL, list->FREE, list->size);
 
 	for (int i = 0; i != BUFF_SIZE; i++) 
-		printf("<  %d  > [ %d ] == [ %d ]\n", i, list->buff[i], list->list[i]);
+		printf("<  %d  > [ %d ] == [ %d ] == [ %d ]\n", i, list->buff[i].val, 
+				list->buff[i].prev, list->buff[i].next);
 
 	printf("LOGICAL LIST:\n");
 	
-	// TODO ?
-	int list_no = 0;
-	int it = list->TAIL;
+	int list_no = 1;
+	int it = list->HEAD;
+	int k = 0;
 	do {
-		printf("<  %d  > [ %d ] == [ %d ]\n", list_no++, list->buff[it], list->list[it]);
-		it = list->list[it];
-	} while(it != 0);
+		printf("<  %d  > [ %d ] == [ %d ] == [ %d ]\n", list_no++, list->buff[it].val, 
+				list->buff[it].prev, list->buff[it].next);
+		it = list->buff[it].next;
+	} while(it != 0 && k++ != 10);
 
 	printf("\n\n\n");
+}
+
+void DotDump(LIST *list)
+{
+	assert(list);
+	assert(list->buff);
+
+	int list_no = 0;
+	int it = list->TAIL;
+	
+	FILE *fout = stdout; 
+	fout = fopen("dump/dump.dot", "w");
+	assert(fout);
+
+	fprintf(fout, "digraph dump_graph {\n\tnode [shape=record];\n\trankdir=LR; \n");
+		
+	for (int i = 1; i != list->MAX_SIZE; i++) {
+		fprintf(fout, "\tstruct%d [label=\"<f0> %d| <f1>next: %d|<f2>prev: %d|<f3> %d\"];\n",
+				i, i, list->buff[i].next, list->buff[i].prev, list->buff[i].val);
+		if (i == list->MAX_SIZE - 1) {
+			break;
+		}
+		fprintf(fout, "\tstruct%d:f0 -> struct%d:f0[style=invis];\n", i, i+1);
+		it = list->buff[it].next;
+	}
+
+	int next_label = list->HEAD;
+
+	while (next_label != 0) {
+		if (list->buff[next_label].next != 0)
+        		fprintf(fout, "\tstruct%d:f1 -> struct%d:f1;\n", next_label, list->buff[next_label].next);
+		if (!list->buff[next_label].prev == 0)
+			fprintf(fout, "\tstruct%d:f2 -> struct%d:f2;\n", next_label, list->buff[next_label].prev);
+        	next_label = list->buff[next_label].next;                                                     
+	}
+	
+	next_label = list->FREE;
+
+	while (next_label != 0) {
+		if (list->buff[next_label].next != 0)
+			fprintf(fout, "\tstruct%d:f1 -> struct%d:f1;\n", next_label, list->buff[next_label].next);
+		next_label = list->buff[next_label].next;
+	}
+
+	fprintf(fout, "}\n");
+
+	if (fout != stdout)
+		fclose(fout);
 }
 
 static void init_list(LIST *list)
 {
 	assert(list);
 
-	for (int i = 1; i != BUFF_SIZE; i++)
-		list->list[i] = -1;
+	for (int i = 1; i != BUFF_SIZE; i++) {
+		list->buff[i].next = -1;
+		list->buff[i].prev = -1;
+	}
 	
-	list->list[0] = 0;
-	list->buff[0] = 0;
+	set_list_node(list, 0, 0, 0, 0);
+	printf("!!!%d, %d, %d!!!\n", list->buff[0].val, list->buff[0].next, list->buff[0].prev);
 }
 
 static int get_free_place(LIST *list)
 {
-	for (int i = 0; i != BUFF_SIZE; i++) {
-		if (list->list[i] == -1)
+	for (int i = 1; i != BUFF_SIZE; i++) {
+		if (list->buff[i].prev == -1)
 			return i;
 	}
 
+	ERRNUM = LIST_NO_FREE_SPACE;
 	return -1; // no free place
+}
+
+int _ListCheck(LIST *list)
+{
+	assert(list);
+	assert(list->buff);
+
+	if (list->buff[list->HEAD].next < 0)
+		return ERRNUM = LIST_BAD_HEAD_ERR;
+
+	int it = list->buff[list->HEAD].next;
+	
+	for (int list_it = 0; list_it != BUFF_SIZE; list_it++) {
+		it = list->buff[it].next;
+
+		if (it == 0) {
+			break;
+		} else if (list_it == BUFF_SIZE) {
+			return ERRNUM = LIST_BROKEN;
+		} else if (it < 0) {
+			return ERRNUM = LIST_BROKEN;
+		}
+	}
+
+	return ERRNUM = NO_ERR;
+}
+
+void set_list_node(LIST *list, int pos, listv_t val, int next, int prev)
+{
+	assert(list);
+	assert(list->buff);
+
+	list->buff[pos].val  = val; 
+	list->buff[pos].next = next;
+	list->buff[pos].prev = prev;
+}
+
+static void add_free_node(LIST *list, int pos)
+{
+	assert(list);
+	assert(list->buff);
+
+	set_list_node(list, pos, 0, list->FREE, -1);
+
+	list->FREE = pos;
+}
+
+static int get_free_node(LIST *list)
+{
+	//TODO check for -1
+	assert(list);
+	assert(list->buff);
+
+	if (list->FREE == 0) {
+		ERRNUM = LIST_NO_FREE_SPACE;
+		return -1; //TODO add space
+	}
+
+	int free_node = list->FREE;
+	list->FREE = list->buff[list->FREE].next;
+	
+	printf("free node found : %d.\n", free_node);
+	return free_node;
+}
+
+static void init_free_space(LIST *list)
+{
+	assert(list);
+	assert(list->buff);
+
+	int it = 0;
+
+	for (it = 1; it != list->MAX_SIZE; it++) {
+		if (list->buff[it].prev == -1) {
+			list->FREE = it;
+			break;
+		}
+	}
+	
+	printf("free is : %d\n", list->FREE);
+	int prev = list->FREE;
+	int next = 0;
+	
+	for ( ; it != list->MAX_SIZE; it++) {
+		if (list->buff[it].prev == -1) {
+			printf("it is : %d\n", it);
+			list->buff[prev].next = it;
+			prev = it;
+		}
+	}
+
+	list->buff[prev].next = 0;
 }

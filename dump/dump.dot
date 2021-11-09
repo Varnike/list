@@ -1,0 +1,24 @@
+digraph dump_graph {
+	node [shape=record];
+	rankdir=LR; 
+	struct1 [label="<f0> 1| <f1>next: 2|<f2>prev: 0|<f3> 10"];
+	struct1:f0 -> struct2:f0[style=invis];
+	struct2 [label="<f0> 2| <f1>next: 3|<f2>prev: 1|<f3> 11"];
+	struct2:f0 -> struct3:f0[style=invis];
+	struct3 [label="<f0> 3| <f1>next: 5|<f2>prev: 2|<f3> 22"];
+	struct3:f0 -> struct4:f0[style=invis];
+	struct4 [label="<f0> 4| <f1>next: 4|<f2>prev: 3|<f3> 1488"];
+	struct4:f0 -> struct5:f0[style=invis];
+	struct5 [label="<f0> 5| <f1>next: 0|<f2>prev: 5|<f3> 777"];
+	struct5:f0 -> struct6:f0[style=invis];
+	struct6 [label="<f0> 6| <f1>next: 7|<f2>prev: -1|<f3> 0"];
+	struct6:f0 -> struct7:f0[style=invis];
+	struct7 [label="<f0> 7| <f1>next: 0|<f2>prev: -1|<f3> 0"];
+	struct1:f1 -> struct2:f1;
+	struct2:f1 -> struct3:f1;
+	struct2:f2 -> struct1:f2;
+	struct3:f1 -> struct5:f1;
+	struct3:f2 -> struct2:f2;
+	struct5:f2 -> struct5:f2;
+	struct6:f1 -> struct7:f1;
+}

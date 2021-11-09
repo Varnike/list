@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-I -Wall
-DEPS = list.h
-OBJ = main.o list.o
+DEPS = list.h error.h
+OBJ = main.o list.o error.o
 
 %.o: %.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
