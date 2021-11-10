@@ -55,7 +55,8 @@ const char *errmsg(int errt)
 		"List bad node connection!",
 		"List bad free addres!",
 		"List free list breoken!",
-		"List invalid free list node!"
+		"List invalid free list node!",
+		"Bad list for ctor!"
 	};
 
 	switch (errt/100) {
@@ -67,6 +68,9 @@ const char *errmsg(int errt)
 		break;
 	case 2:
 		return list_messages[errt - 200];
+		break;
+	default:
+		return messages[UNKNOWN_ERR];
 		break;
 	}
 #if 0

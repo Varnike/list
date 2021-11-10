@@ -70,7 +70,7 @@ enum assert_errs {
 	LABEL_NAME_CNT_ERR= 109
 };
 
-const int LIST_ERRS = 12;
+const int LIST_ERRS = 13;
 /*
  * LIST errors.
  */
@@ -87,7 +87,9 @@ enum list_errs {
 	LIST_CONNECTION_ERR   = 208,
 	LIST_BAD_FREE_ERR     = 209,
 	LIST_FREE_LIST_BROKEN = 210,
-	LIST_BAD_FREE_NODE    = 211
+	LIST_BAD_FREE_NODE    = 211,
+	LIST_CTOR_ERR         = 212,
+	LIST_LOGIC_ADDR_ERR   = 213
 };
 
 /*

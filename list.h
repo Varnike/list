@@ -13,18 +13,19 @@
 
 /*
  * 	TODO
- * 	1)Check
+ * 	1)Check+
  * 		nulls
  * 		double list
  * 		free list
- * 	2)Dump
+ * 	2)Dump+
  * 		size
  * 		size in func
  * 		new errs
- * 	3)WhileLoop
+ * 	3)WhileLoop+
  * 	4)Resize
  * 	5)More deds functions / naming?
- * 	6)Linearising
+ * 	6)Linearising+
+ * 	7)Ctor  check+
  */
 
 #define $ printf("\t\t\t---ON LINE %d IN FUNCTION %s---\n", __LINE__, __func__);
@@ -33,6 +34,7 @@
 	{										\
 		assert(list);								\
 		assert(list->buff);							\
+		ERRNUM = 0;								\
 		_ListCheck(list);							\
 		if (ERRNUM) {								\
 			perror(errmsg(ERRNUM));						\
@@ -42,13 +44,17 @@
 
 typedef int listv_t;
 
-const int BUFF_SIZE = 16; // char
+const int BUFF_SIZE = 5;
+
+enum get_data_mode {
+	PHYS_ADDR = 0,
+	LINEAR_LOGIC_ADDR = 1 // only for linearised list!
+};
 
 struct _NODE {
 	listv_t val;
 	int next;
 	int prev;
-	char state;
 };
 
 struct LIST {
@@ -69,7 +75,7 @@ int ListDelete(LIST *list, int logical_pos);
 int ______ListFindNode(LIST *lst, int pos);
 int ListDtor(LIST *list);
 int ListLinearise(LIST *list);
-listv_t ListGetValue(LIST *list, int pos);
+_NODE *ListGetValue(LIST *list, int pos, int mode = 0);
 
 void ListDump(LIST *list);
 void DotDump(LIST *list);

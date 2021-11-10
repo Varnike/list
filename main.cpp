@@ -4,6 +4,7 @@ int main()
 {
 	LIST lst = {};
 	ListCtor(&lst, 1, 10);
+
 	ListDump(&lst);
 	ListInsertBack(&lst, 11);
 	ListDump(&lst);
@@ -17,25 +18,20 @@ int main()
 	ListDump(&lst);
 	ListInsertBack(&lst, 777);
         ListDump(&lst);
-	ListInsertFront(&lst, 900);
-//	ListLinearise(&lst);
-	ListInsert(&lst, 3, 777777);
-	lst.buff[3].prev = 0;
-	ListDelete(&lst, 3);
+	//ListInsertFront(&lst, 900);
+	ListLinearise(&lst);
+	//_NODE *op = ListGetValue(&lst, 1, 1);
+	//printf("=====%d=====\n", op->val);
+	//ListInsert(&lst, 3, 777777);
+	//lst.buff[3].prev = 0;
+	//ListDelete(&lst, 3);
+	ListInsertFront(&lst, 9);
 	ListDump(&lst);
 	DotDump(&lst);
-
-	ListDtor(&lst);
-	/*
-	ListInsertBack(&lst, 1488);
-	int el1487 = ListInsertBack(&lst, 1487);
-	ListInsert(&lst, el1487, 790);
-	ListDump(&lst);
+//	lst.buff[10].prev = 1;
+	//ListDtor(&lst);
 	
-	ListDelete(&lst, 2);
-	ListDump(&lst);
-	ListInsertFront(&lst, 69);
-	ListDump(&lst);
+	
+	
 	ListDtor(&lst);
-	*/
 }
