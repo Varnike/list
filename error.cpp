@@ -48,7 +48,14 @@ const char *errmsg(int errt)
 		"List bad head node error!",
 		"List no free space error!",
 		"List node not found!",
-		"Lisr is broken!"
+		"Lisr is broken!",
+		"List bad tail node error!",
+		"List node bad next error!",
+		"List node bad prev error!",
+		"List bad node connection!",
+		"List bad free addres!",
+		"List free list breoken!",
+		"List invalid free list node!"
 	};
 
 	switch (errt/100) {

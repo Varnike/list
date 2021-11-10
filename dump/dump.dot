@@ -1,24 +1,175 @@
 digraph dump_graph {
-	node [shape=record];
 	rankdir=LR; 
-	struct1 [label="<f0> 1| <f1>next: 2|<f2>prev: 0|<f3> 10"];
-	struct1:f0 -> struct2:f0[style=invis];
-	struct2 [label="<f0> 2| <f1>next: 3|<f2>prev: 1|<f3> 11"];
-	struct2:f0 -> struct3:f0[style=invis];
-	struct3 [label="<f0> 3| <f1>next: 5|<f2>prev: 2|<f3> 22"];
-	struct3:f0 -> struct4:f0[style=invis];
-	struct4 [label="<f0> 4| <f1>next: 4|<f2>prev: 3|<f3> 1488"];
-	struct4:f0 -> struct5:f0[style=invis];
-	struct5 [label="<f0> 5| <f1>next: 0|<f2>prev: 5|<f3> 777"];
-	struct5:f0 -> struct6:f0[style=invis];
-	struct6 [label="<f0> 6| <f1>next: 7|<f2>prev: -1|<f3> 0"];
-	struct6:f0 -> struct7:f0[style=invis];
-	struct7 [label="<f0> 7| <f1>next: 0|<f2>prev: -1|<f3> 0"];
-	struct1:f1 -> struct2:f1;
-	struct2:f1 -> struct3:f1;
-	struct2:f2 -> struct1:f2;
-	struct3:f1 -> struct5:f1;
-	struct3:f2 -> struct2:f2;
-	struct5:f2 -> struct5:f2;
-	struct6:f1 -> struct7:f1;
+	struct1 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">1</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 0</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: 5</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 777</td></tr>
+					</table>>];
+	struct1:port0 -> struct2:port0[style=invis];
+	struct2 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">2</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 3</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: 0</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 11</td></tr>
+					</table>>];
+	struct2:port0 -> struct3:port0[style=invis];
+	struct3 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">3</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 4</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: 2</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 22</td></tr>
+					</table>>];
+	struct3:port0 -> struct4:port0[style=invis];
+	struct4 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">4</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 5</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: 3</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 33</td></tr>
+					</table>>];
+	struct4:port0 -> struct5:port0[style=invis];
+	struct5 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">5</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 1</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: 4</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 1488</td></tr>
+					</table>>];
+	struct5:port0 -> struct6:port0[style=invis];
+	struct6 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">6</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 7</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct6:port0 -> struct7:port0[style=invis];
+	struct7 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">7</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 8</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct7:port0 -> struct8:port0[style=invis];
+	struct8 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">8</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 9</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct8:port0 -> struct9:port0[style=invis];
+	struct9 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">9</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 10</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct9:port0 -> struct10:port0[style=invis];
+	struct10 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">10</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 11</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct10:port0 -> struct11:port0[style=invis];
+	struct11 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">11</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 12</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct11:port0 -> struct12:port0[style=invis];
+	struct12 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">12</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 13</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct12:port0 -> struct13:port0[style=invis];
+	struct13 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">13</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 14</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct13:port0 -> struct14:port0[style=invis];
+	struct14 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">14</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 15</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct14:port0 -> struct15:port0[style=invis];
+	struct15 [shape=box3d
+					label=
+	<
+	<table border="0" cellspacing="0">
+						<tr><td PORT="port0" border="1"  bgcolor="lightskyblue">15</td></tr>
+						<tr><td PORT="port1" border="1" bgcolor="grey69">next: 0</td></tr>
+						<tr><td PORT="port2" border="1" bgcolor="grey69">prev: -1</td></tr>
+						<tr><td PORT="port3" border="1" bgcolor="grey69">data: 0</td></tr>
+					</table>>];
+	struct2:port1 -> struct3:port1[style=bold, arrowhead=vee,					color=forestgreen];
+	struct3:port1 -> struct4:port1[style=bold, arrowhead=vee,					color=forestgreen];
+	struct3:port2 -> struct2:port2[style=dashed, arrowhead=onormal,					color=grey];
+	struct4:port1 -> struct5:port1[style=bold, arrowhead=vee,					color=forestgreen];
+	struct4:port2 -> struct3:port2[style=dashed, arrowhead=onormal,					color=grey];
+	struct5:port1 -> struct1:port1[style=bold, arrowhead=vee,					color=forestgreen];
+	struct5:port2 -> struct4:port2[style=dashed, arrowhead=onormal,					color=grey];
+	struct1:port2 -> struct5:port2[style=dashed, arrowhead=onormal,					color=grey];
+	struct6:port1 -> struct7:port1;
+	struct7:port1 -> struct8:port1;
+	struct8:port1 -> struct9:port1;
+	struct9:port1 -> struct10:port1;
+	struct10:port1 -> struct11:port1;
+	struct11:port1 -> struct12:port1;
+	struct12:port1 -> struct13:port1;
+	struct13:port1 -> struct14:port1;
+	struct14:port1 -> struct15:port1;
+	free[fillcolor="pink",style=filled, shape=doubleoctagon, label="FREE = 6"];
+	free -> struct6:port1;
+	head[fillcolor="pink", style=filled, shape=doubleoctagon, label="HEAD = 2"];
+	head -> struct2:port1;
+	tail[fillcolor="pink", style=filled, shape=doubleoctagon, label="TAIL = 1"];
+	tail -> struct1:port1;
 }

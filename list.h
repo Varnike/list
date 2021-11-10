@@ -11,18 +11,38 @@
 #include <inttypes.h>
 #include "error.h"
 
+/*
+ * 	TODO
+ * 	1)Check
+ * 		nulls
+ * 		double list
+ * 		free list
+ * 	2)Dump
+ * 		size
+ * 		size in func
+ * 		new errs
+ * 	3)WhileLoop
+ * 	4)Resize
+ * 	5)More deds functions / naming?
+ * 	6)Linearising
+ */
+
+#define $ printf("\t\t\t---ON LINE %d IN FUNCTION %s---\n", __LINE__, __func__);
+
 #define LIST_CHECK 									\
 	{										\
 		assert(list);								\
 		assert(list->buff);							\
 		_ListCheck(list);							\
-		if (ERRNUM)								\
+		if (ERRNUM) {								\
+			perror(errmsg(ERRNUM));						\
 			assert(!"HUGE ERR!");						\
+		}									\
 	}
 
 typedef int listv_t;
 
-const int BUFF_SIZE = 8; // char
+const int BUFF_SIZE = 16; // char
 
 struct _NODE {
 	listv_t val;

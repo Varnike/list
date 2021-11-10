@@ -13,11 +13,15 @@ int main()
 	ListDump(&lst);
 	ListInsertBack(&lst, 1488);
 	ListDump(&lst);
-	ListDelete(&lst, 4);
+	ListDelete(&lst, 1);
 	ListDump(&lst);
 	ListInsertBack(&lst, 777);
         ListDump(&lst);
-	ListLinearise(&lst);
+	ListInsertFront(&lst, 900);
+//	ListLinearise(&lst);
+	ListInsert(&lst, 3, 777777);
+	lst.buff[3].prev = 0;
+	ListDelete(&lst, 3);
 	ListDump(&lst);
 	DotDump(&lst);
 
